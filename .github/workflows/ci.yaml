@@ -26,8 +26,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - run: docker-compose up -d
-    - run: curl -X POST -d '{"username":"test","body":"adasd"}' http://localhost:8080/posts
+
+    - name: Run project
+      run: docker-compose up -d
+    - name: Run E2E tests
+      run: go run cmd/e2e/main.go
     - if: failure()
       run: docker-compose ps
     - if: failure()
