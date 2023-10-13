@@ -2,9 +2,9 @@
 
 ## Como rodar 
 
-Para rodar o projeto e o banco de dados
+Para rodar o projeto e o banco de dados em desenvolvimento
 ```
-docker-compose up -d 
+make dev
 ```
 
 Para rodar os testes unitários
