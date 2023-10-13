@@ -19,12 +19,19 @@ func NewPostSuccessfulSuite() PostSuccessfulSuite {
 }
 
 func (suite *PostSuccessfulSuite) Run() {
+	logger.Println("Start Post Successful Suite")
+
 	id := suite.create()
 	suite.read(id)
+	// suite.update(id)
 	suite.delete(id)
+
+	logger.Println("End Post Successful Suite")
 }
 
 func (suit *PostSuccessfulSuite) create() string {
+	logger.Println("*** Create Post ***")
+
 	payload := map[string]string{
 		"username": suit.username,
 		"body":     suit.body,
@@ -58,6 +65,8 @@ func (suit *PostSuccessfulSuite) create() string {
 }
 
 func (suit *PostSuccessfulSuite) read(id string) {
+	logger.Println("*** Read Post ***")
+
 	resp := suit.api.Get("/posts/" + id)
 	if resp.StatusCode != http.StatusOK {
 		panic("Invalid Status Code")
@@ -77,7 +86,36 @@ func (suit *PostSuccessfulSuite) read(id string) {
 	}
 }
 
+func (suit *PostSuccessfulSuite) update(id string) {
+	logger.Println("*** Update Post ***")
+
+	payload := map[string]string{
+		"username": "new_user",
+		"body":     "Other body",
+	}
+
+	resp := suit.api.Put("/posts/"+id, payload)
+	if resp.StatusCode != http.StatusCreated {
+		panic("Invalid Status Code for creation")
+	}
+
+	res := suit.api.ParseBody(resp)
+	if res["id"].(string) == id {
+		panic("Invalid ID")
+	}
+
+	if res["username"].(string) != payload["username"] {
+		panic("Invalid Username")
+	}
+
+	if res["body"].(string) != payload["body"] {
+		panic("Invalid Body")
+	}
+}
+
 func (suit *PostSuccessfulSuite) delete(id string) {
+	logger.Println("*** Delete Post ***")
+
 	resp := suit.api.Delete("/posts/" + id)
 	if resp.StatusCode != http.StatusNoContent {
 		panic("Invalid Status Code")

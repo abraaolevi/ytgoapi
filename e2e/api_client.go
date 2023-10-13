@@ -4,11 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 )
-
-var logger = log.Default()
 
 type ApiClient struct {
 	baseUrl string
@@ -54,12 +51,40 @@ func (api *ApiClient) Get(path string) *http.Response {
 	return resp
 }
 
+func (api *ApiClient) Put(path string, data map[string]string) *http.Response {
+	body, err := json.Marshal(data)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	payload := bytes.NewBuffer(body)
+	url := api.baseUrl + path
+
+	logger.Println("PUT", url, payload)
+
+	req, err := http.NewRequest(http.MethodPut, url, payload)
+	if err != nil {
+		panic(err)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	logger.Println("RESPONSE", resp.Status)
+
+	return resp
+}
+
 func (api *ApiClient) Delete(path string) *http.Response {
 	url := api.baseUrl + path
 
 	logger.Println("DELETE", url)
 
-	req, err := http.NewRequest("DELETE", url, nil)
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		panic(err)
 	}
