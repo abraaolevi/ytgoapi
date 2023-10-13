@@ -26,14 +26,18 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+
     - name: Run project
       run: docker-compose up -d
+
     - name: Set up Go for e2e 
-    - uses: actions/setup-go@v3
+      uses: actions/setup-go@v3
       with:
         go-version-file: go.mod
+
     - name: Run E2E tests
       run: go run cmd/e2e/main.go
+
     - if: failure()
       run: docker-compose ps
     - if: failure()
