@@ -11,7 +11,7 @@ type PostSuccessfulSuite struct {
 func NewPostSuccessfulSuite() PostSuccessfulSuite {
 	return PostSuccessfulSuite{
 		api: ApiClient{
-			baseUrl: "http://localhost:3000",
+			baseUrl: "http://localhost:8080",
 		},
 		username: "my_username_test",
 		body:     "My Body Description Test",
